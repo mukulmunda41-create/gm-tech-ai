@@ -5,18 +5,31 @@
 const nav = document.getElementById('nav');
 const menu = document.getElementById('menu');
 const menuBtn = document.querySelector('.menu-btn');
+const main = document.getElementById('main');
+const footer = document.getElementById('contact');
 
 function setMenu(open) {
   menu.hidden = !open;
   menuBtn.setAttribute('aria-expanded', open);
+  // Full-screen sheet: lock the page behind it, keep Tab inside it (nav + sheet), keep the X on screen.
+  document.documentElement.classList.toggle('menu-open', open);
+  main.inert = footer.inert = open;
+  if (open) nav.classList.remove('nav--hidden');
 }
 menuBtn.addEventListener('click', () => setMenu(menu.hidden));
 menu.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
 // Services dropdown opens on hover/focus; drop focus after a pick so it closes.
 document.querySelector('.drop').addEventListener('click', () => document.activeElement.blur());
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { setMenu(false); menuBtn.focus(); } });
+// The sheet is phone-only; rotating into the wider layout (where its button is hidden) closes it.
+matchMedia('(max-width: 760px)').addEventListener('change', () => setMenu(false));
 // Skip link: smooth scroll may intercept the jump, so move focus to the content explicitly.
-document.querySelector('.skip').addEventListener('click', () => document.getElementById('main').focus({ preventScroll: true }));
+document.querySelector('.skip').addEventListener('click', () => main.focus({ preventScroll: true }));
+
+// Phone Book a Call bar: CSS shows it while the nav is tucked away; it steps aside once the footer,
+// which has its own booking links, is on screen.
+const callbar = document.querySelector('.callbar');
+new IntersectionObserver(([e]) => callbar.classList.toggle('is-off', e.isIntersecting)).observe(footer);
 
 // Wrap each word of .split paragraphs in a span so it can be "filled" on scroll.
 document.querySelectorAll('.split').forEach((el) => {
@@ -51,6 +64,16 @@ if (window.gsap && window.ScrollTrigger) {
     // footer is last on the page, so its bottom meets the viewport bottom at max scroll
     { trigger: '.footer', start: 'top 40px', end: 'bottom bottom' },
   ];
+  // No pins (phones, reduced motion): the video section is just its own box.
+  const staticZones = [{ trigger: '.dark', start: 'top 40px', end: 'bottom 40px' }, ...laterZones];
+
+  const human = document.querySelector('.hand--human');
+  const robot = document.querySelector('.hand--robot');
+  // Load intro shared by both motion branches. Each branch calls it, so matchMedia reverts it with that branch.
+  const intro = () => gsap.timeline({ defaults: { ease: 'power3.out' } })
+    .from('.hero-title .line', { opacity: 0, filter: 'blur(10px)', y: 20, duration: 1, stagger: 0.12 })
+    .from('.orb', { opacity: 0, scale: 0.7, duration: 1.2 }, 0)
+    .from('.hero-copy, .hero-foot .chips, .hero-cta, .nav > *', { opacity: 0, y: 12, duration: 0.7, stagger: 0.04 }, 0.3);
 
   // Cursor spark: the spark from where the hands meet, trailing the native cursor (which stays
   // visible). It opens into a ring over anything clickable. Fine pointers only; off under reduced motion.
@@ -92,13 +115,10 @@ if (window.gsap && window.ScrollTrigger) {
     };
   });
 
-  // Reduced motion: no pins, so the video section is just its own box.
-  gsap.matchMedia().add('(prefers-reduced-motion: reduce)', () => {
-    watchNav([{ trigger: '.dark', start: 'top 40px', end: 'bottom 40px' }, ...laterZones]);
-  });
+  gsap.matchMedia().add('(prefers-reduced-motion: reduce)', () => watchNav(staticZones));
 
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const mobile = () => innerWidth < 760;
+  // Desktop: pinned, scroll-scrubbed choreography with smooth scroll.
+  gsap.matchMedia().add('(min-width: 761px) and (prefers-reduced-motion: no-preference)', () => {
 
     // Smooth scroll (anchors: true makes the nav/menu links glide).
     let lenis, tick;
@@ -113,18 +133,13 @@ if (window.gsap && window.ScrollTrigger) {
     // 1. Hero — intro, then the two hands reach for each other as you scroll.
     // The "apart" pose is set outside the scroll timeline: ScrollTrigger's refresh reverts
     // its own timelines and wouldn't re-render a from-state at progress 0.
-    const human = document.querySelector('.hand--human');
-    const robot = document.querySelector('.hand--robot');
-    const reach = mobile() ? 0.24 : 0.38; // how far apart (share of viewport width) each hand starts; closer on phones so the hands read at load
+    const reach = 0.38; // how far apart (share of viewport width) each hand starts
     gsap.set(human, { xPercent: (-innerWidth * reach / human.offsetWidth) * 100 });
     gsap.set(robot, { xPercent: (innerWidth * reach / robot.offsetWidth) * 100 });
 
-    gsap.timeline({ defaults: { ease: 'power3.out' } })
-      .from('.hero-title .line', { opacity: 0, filter: 'blur(10px)', y: 20, duration: 1, stagger: 0.12 })
-      .from('.orb', { opacity: 0, scale: 0.7, duration: 1.2 }, 0)
+    intro()
       .from(human, { x: -160, opacity: 0, duration: 1.1 }, 0.15)
-      .from(robot, { x: 160, opacity: 0, duration: 1.1 }, 0.15)
-      .from('.hero-copy, .hero-foot .chips, .nav > *', { opacity: 0, y: 12, duration: 0.7, stagger: 0.04 }, 0.3);
+      .from(robot, { x: 160, opacity: 0, duration: 1.1 }, 0.15);
 
     gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=120%', pin: true, scrub: 1 } })
       .to([human, robot], { xPercent: 0, ease: 'power1.inOut', duration: 0.8 }, 0)
@@ -182,5 +197,20 @@ if (window.gsap && window.ScrollTrigger) {
     return () => {
       if (lenis) { gsap.ticker.remove(tick); lenis.destroy(); }
     };
+  });
+
+  // Phones: native scroll, no pins, no Lenis. The hands meet on their own at load; sections rise in as they enter.
+  gsap.matchMedia().add('(max-width: 760px) and (prefers-reduced-motion: no-preference)', () => {
+    const apart = (el, dir) => dir * innerWidth * 0.24 / el.offsetWidth * 100; // start gap, as a share of the viewport
+    // slide only, no fade: the hands are the phone's LCP element, and opacity 0 would delay it
+    intro()
+      .from(human, { xPercent: apart(human, -1), duration: 1.8, ease: 'power3.inOut' }, 0.2)
+      .from(robot, { xPercent: apart(robot, 1), duration: 1.8, ease: 'power3.inOut' }, 0.2)
+      .to('.orb', { scale: 1.15, duration: 0.8 }, '-=0.4'); // blooms as the fingertips touch
+    // In page order; each element is its own trigger, so the stacked dark words arrive one by one.
+    gsap.utils.toArray('.sec-head, .dark-words span, .dark-copy, .fan, .step, .ring-wrap, .review-grid, .row').forEach((el) => {
+      gsap.from(el, { opacity: 0, y: 32, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
+    });
+    watchNav(staticZones);
   });
 }

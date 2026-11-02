@@ -53,11 +53,17 @@
   <a class="nav-cta" href="#contact">Book a Call</a>
 </header>
 
-<nav class="menu" id="menu" hidden>
+<nav class="menu" id="menu" aria-label="Menu" hidden>
   <a href="#services">Services</a>
   <a href="#process">How we work</a>
   <a href="#engage">Work with us</a>
   <a href="#contact">Contact</a>
+  <div class="menu-foot">
+    <a class="menu-cta" href="#contact">Book a Call</a>
+    <!-- PLACEHOLDER: same email and WhatsApp as the footer; replace both places together -->
+    <a href="mailto:hello@yourdomain.com">hello@yourdomain.com</a>
+    <a href="https://wa.me/910000000000">WhatsApp · +91 00000 00000</a>
+  </div>
 </nav>
 
 <main id="main" tabindex="-1">
@@ -80,13 +86,18 @@
       <ul class="chips" aria-label="What we do">
         <li class="chip">Agents</li><li class="chip">Voice</li><li class="chip">Automation</li>
       </ul>
+      <a class="hero-cta" href="#services">See what we build</a>
     </div>
   </section>
 
   <!-- 2. DARK VIDEO -->
   <section class="dark" id="about">
     <div class="dark-inner">
-      <video class="dark-video" src="assets/tunnel.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+      <video class="dark-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+        <!-- desktop file first: browsers that ignore `media` on <source> keep today's video -->
+        <source src="assets/tunnel.mp4" type="video/mp4" media="(min-width: 761px)">
+        <source src="assets/tunnel-mobile.mp4" type="video/mp4">
+      </video>
       <div class="dark-shade" aria-hidden="true"></div>
       <h2 class="dark-words" aria-label="AI agents. Automation. Always on.">
         <span aria-hidden="true">AI AGENTS</span>
@@ -249,6 +260,9 @@
   <p class="footer-note">* Every system we build is custom. Timelines, costs and time saved are estimated case by case after a discovery call.</p>
   <div class="footer-bottom">© 2026 GM Tech Solution. All rights reserved.</div>
 </footer>
+
+<!-- phone-only; a later sibling of .nav so CSS can show it while the nav is tucked away -->
+<a class="callbar" href="#contact">Book a Call</a>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>

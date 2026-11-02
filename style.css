@@ -108,15 +108,24 @@ html { scroll-padding-top: var(--nav-h); }
 .menu-btn[aria-expanded="true"] span:first-child { transform: translateY(3.5px) rotate(45deg); }
 .menu-btn[aria-expanded="true"] span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
 
+/* full-screen sheet; only reachable at <=760px, where .menu-btn shows. The nav (z 50) stays on top so the X works */
 .menu {
-  position: fixed; top: calc(var(--nav-h) + 8px); left: var(--pad); z-index: 49;
-  display: grid; gap: 4px; padding: 22px 30px; border-radius: 20px;
-  background: rgba(255, 255, 255, .92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 20px 60px -20px rgba(0, 0, 0, .25);
+  position: fixed; inset: 0; z-index: 49; display: flex; flex-direction: column;
+  padding: calc(var(--nav-h) + 24px) var(--pad) calc(24px + env(safe-area-inset-bottom));
+  overflow-y: auto; overscroll-behavior: contain; background: #fff;
 }
 .menu[hidden] { display: none; }
-.menu a { font-size: clamp(22px, 2.4vw, 30px); font-weight: 500; letter-spacing: -.03em; }
-.menu a:hover { color: var(--label); }
+.menu > a { padding: 6px 0; font-size: clamp(34px, 10vw, 44px); font-weight: 500; letter-spacing: -.04em; line-height: 1.15; }
+.menu > a:hover { color: var(--label); }
+.menu-foot { display: grid; gap: 2px; margin-top: auto; padding-top: 32px; }
+.menu-foot a { padding: 11px 0; font-size: 15px; color: var(--ink-2); }
+.menu-foot .menu-cta { display: grid; place-items: center; height: 54px; margin-bottom: 10px; border-radius: 12px; background: var(--ink); color: #fff; font-weight: 600; }
+/* set on <html> by setMenu() */
+.menu-open { overflow: hidden; }                 /* page behind the sheet stays put */
+.menu-open .nav { color: var(--ink); }           /* the sheet is white, even when opened over the video */
+.menu-open .nav::before { opacity: 1; }
+.menu-open .nav-cta { visibility: hidden; }      /* the sheet has its own, bigger Book a Call */
+.hero-cta, .callbar { display: none; }           /* phone-only; shown in the mobile block */
 
 /* ---------- 1. hero ---------- */
 .hero { --s: 66vw; --g: .5vw; --meet: 58%; /* 66vw: the robot arm (.7813 of --s) bleeds past the right edge */ position: relative; height: 100vh; height: 100svh; overflow: hidden; }
@@ -269,43 +278,104 @@ html { scroll-padding-top: var(--nav-h); }
 .footer-note { max-width: 70ch; margin-top: clamp(40px, 7vh, 70px); font-size: 13px; line-height: 1.6; color: rgba(255, 255, 255, .5); }
 .footer-bottom { margin-top: 32px; padding-top: 28px; border-top: 1px solid rgba(255, 255, 255, .14); font-size: 14px; color: rgba(255, 255, 255, .7); }
 
-/* ---------- mobile ---------- */
+/* ---------- static forms of the two motion pieces: phones (no pins) and reduced motion ---------- */
+@media (max-width: 760px), (prefers-reduced-motion: reduce) {
+  .dark-words { grid-auto-flow: row; align-content: center; row-gap: .5em; }
+  .dark-words span, .dark-words span + span { grid-area: auto; opacity: 1; }
+  /* still ring -> flat row of cards (phones turn it into a grid below) */
+  .ring-wrap { height: auto; perspective: none; }
+  .ring { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: auto; max-width: 900px; aspect-ratio: auto; animation: none; transform: none; }
+  .tool { position: static; width: var(--w); aspect-ratio: 1; transform: none; }
+}
+
+/* ---------- mobile: native scroll, no pins, swipe rows, thumb-sized targets ---------- */
 @media (max-width: 760px) {
   :root { --nav-h: 64px; }
+  html { scroll-behavior: smooth; } /* no Lenis on phones; anchors still glide (off again under reduced motion) */
   .nav-links { display: none; }
-  .menu-btn { display: block; justify-self: start; margin-left: -8px; }
+  .menu-btn { display: block; justify-self: start; width: 44px; height: 44px; margin-left: -10px; }
   .nav .mark { width: 48px; }
-  .nav-cta { height: 40px; padding: 0 14px; border-radius: 8px; font-size: 13px; }
+  .nav .brand { padding-block: 9px; } /* 26px logo -> 44px tap target */
+  .nav-cta { height: 44px; padding: 0 16px; border-radius: 8px; font-size: 14px; }
+
+  /* hero: hand geometry as before; one real button instead of the chips (the nav already has Book a Call) */
   .hero { --s: 150vw; --g: 1vw; --meet: 52%; }
   .hero-title { top: 34%; font-size: 11vw; }
   .orb { --orb: 92vw; top: var(--meet); opacity: 1; filter: blur(20px); }
   .hero-foot { grid-template-columns: 1fr; gap: 18px; }
-  .scroll-line { display: none; }
-  .hero-foot .chips { justify-self: start; }
+  .scroll-line, .hero-foot .chips { display: none; }
+  .hero-cta { display: grid; place-items: center; height: 50px; border-radius: 12px; box-shadow: inset 0 0 0 1.5px var(--ink); font-size: 15px; font-weight: 600; transition: background .3s; }
+  .hero-cta:active { background: #f1f2f4; } /* colour, not scale: the intro owns its transform */
+
+  /* video band: sized by its content, no pin; the words stack via the shared block above */
+  .dark { height: auto; }
+  .dark-inner { position: relative; min-height: 72vh; min-height: 72svh; padding: 72px var(--pad); display: grid; align-content: center; justify-items: center; gap: 40px; text-align: center; }
+  .dark-words, .dark-copy { position: relative; inset: auto; } /* in flow, but positioned so they paint above the absolute video */
+  .dark-words { font-size: clamp(1.5rem, 7.4vw, 2.4rem); }
+  .dark-copy { max-width: 30ch; font-size: 17px; }
+
+  /* cards: a swipeable row instead of the pinned fan */
+  .fan-sec { min-height: 0; padding: 72px var(--pad); }
+  .fan {
+    align-self: stretch; justify-content: flex-start; gap: 14px; margin: 32px calc(var(--pad) * -1) 0;
+    padding: 8px var(--pad) 28px; /* room for the card shadows, which the scroller clips */
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--pad); perspective: none;
+  }
+  /* `.fan .card` ties the :nth-child tilts on specificity and comes later, so it wins */
+  .fan .card { width: 72vw; max-width: 320px; aspect-ratio: 3 / 4; transform: none; scroll-snap-align: start; }
+  .card figcaption { left: 16px; bottom: 14px; font-size: 15px; font-weight: 500; }
+
+  .journey, .reviews, .rows, .stack { padding: 72px var(--pad); }
+  .journey .sec-head, .reviews .sec-head, .engage .sec-head { margin-bottom: 32px; }
+
+  /* how we work: a numbered vertical timeline */
+  .journey-line { display: none; }
+  .journey-steps { grid-template-columns: 1fr; gap: 28px; }
+  .step { position: relative; padding: 0 0 0 52px; border-top: 0; }
+  .step-num {
+    position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 34px; aspect-ratio: 1;
+    border: 1px solid var(--chip); border-radius: 50%; font-size: 12px; letter-spacing: 0; color: var(--ink);
+  }
+  .step:not(:last-child)::after { content: ""; position: absolute; left: 17px; top: 42px; bottom: -20px; width: 1px; background: var(--chip); }
+  .step h3 { margin: 5px 0 8px; font-size: 1.35rem; }
+
+  /* tools: two columns of readable tiles (10 tools = 5 even rows) */
+  .ring-wrap { margin: 32px 0; }
+  .ring { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+  .tool { display: flex; align-items: center; gap: 12px; width: auto; height: 56px; aspect-ratio: auto; padding: 0 16px; border-radius: 14px; }
+  .tool-icon { flex: none; width: 24px; }
+  .tool-name, .tool--text .tool-name { font-size: 15px; letter-spacing: -.01em; }
+
+  /* reviews: swipeable */
+  .review-grid {
+    display: flex; gap: 12px; margin: 0 calc(var(--pad) * -1); padding: 4px var(--pad) 12px;
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--pad);
+  }
+  .review { flex: none; width: 84vw; gap: 28px; scroll-snap-align: start; }
+
   .row { grid-template-columns: 36px 1fr; }
   .row-text { grid-template-columns: 1fr; }
   .row-text p { margin-top: 10px; }
-  .fan-sec { justify-content: flex-start; padding-top: calc(var(--nav-h) + 6vh); }
-  .card { width: 28vw; border-radius: 12px; }
-  .card + .card { margin-left: -11vw; } /* overlap so five cards fit a phone width */
-  .fan { gap: 0; }
-  .card figcaption { display: none; }
-  .journey-steps, .review-grid { grid-template-columns: 1fr; }
   .footer-cols { grid-template-columns: 1fr 1fr; }
   .footer-cols > :first-child { grid-column: 1 / -1; }
-  .journey-steps { gap: 40px; }
-  .journey-line { display: none; }
+  .footer-col a { padding: 11px 0; } /* 44px tap rows */
+
+  /* Book a Call bar: shown exactly while the nav is tucked away (watchNav's nav--hidden), so only one
+     Book a Call is ever on screen; .is-off (main.js) keeps it away once the footer is in view */
+  .callbar {
+    position: fixed; left: var(--pad); right: var(--pad); bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 48;
+    display: grid; place-items: center; height: 52px; border-radius: 12px; background: var(--ink); color: #fff; font-size: 15px; font-weight: 600;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22), 0 18px 40px -14px rgba(0, 0, 0, .5); /* reads on white and on dark sections */
+    translate: 0 200%; visibility: hidden; transition: translate .45s var(--ease), visibility .45s, background .3s;
+  }
+  .nav--hidden:not(:focus-within) ~ .callbar:not(.is-off) { translate: 0 0; visibility: visible; }
+  .callbar:active { background: var(--ink-2); }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   .orb, .scroll-line { animation: none; }
-  .nav, .skip { transition: none; }
-  .dark-words { grid-auto-flow: row; align-content: center; row-gap: .5em; }
-  .dark-words span, .dark-words span + span { grid-area: auto; opacity: 1; }
-  /* still ring → flat row of cards */
-  .ring-wrap { height: auto; perspective: none; }
-  .ring { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: auto; max-width: 900px; aspect-ratio: auto; animation: none; transform: none; }
-  .tool { position: static; width: var(--w); aspect-ratio: 1; transform: none; }
+  .nav, .skip, .callbar { transition: none; }
 }
 
 /* ---------- cursor spark (created by main.js for fine pointers; the native cursor stays) ---------- */
