@@ -183,7 +183,7 @@ html { scroll-padding-top: var(--nav-h); }
   max-width: 32ch; font-size: clamp(1rem, 1.4vw, 1.25rem); font-weight: 500; line-height: 1.35;
 }
 
-/* ---------- 5e. client reviews ---------- */
+/* ---------- 5e. our impact & results: outcome cards ---------- */
 .reviews { padding: clamp(80px, 14vh, 160px) var(--pad); }
 .reviews .sec-head { margin-bottom: clamp(40px, 8vh, 80px); }
 .review-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -191,12 +191,12 @@ html { scroll-padding-top: var(--nav-h); }
   display: flex; flex-direction: column; justify-content: space-between; gap: 40px; margin: 0;
   padding: clamp(28px, 3vw, 40px); border-radius: 22px; background: #f4f5f7;
 }
-.review blockquote { margin: 0; font-size: clamp(17px, 1.4vw, 20px); line-height: 1.5; letter-spacing: -.01em; }
-.review blockquote::before { content: "\201C"; display: block; margin-bottom: 14px; font: 72px/.6 Georgia, serif; color: var(--soft); }
-.review figcaption { display: flex; align-items: center; gap: 14px; padding-top: 24px; border-top: 1px solid #e3e5e9; font-size: 14px; }
-.avatar { display: grid; place-items: center; flex: none; width: 44px; aspect-ratio: 1; border-radius: 50%; background: var(--ink); color: #fff; font-size: 13px; font-weight: 600; }
-.review-name { display: block; font-weight: 600; }
-.review-role { display: block; color: var(--label); }
+.review h3 { font-size: clamp(1.3rem, 1.8vw, 1.6rem); font-weight: 500; letter-spacing: -.03em; line-height: 1.15; }
+.review h3 + p { margin-top: 12px; color: var(--ink-2); }
+.review-metric {
+  align-self: flex-start; padding: 9px 16px; border-radius: 999px;
+  background: var(--ink); color: #fff; font-size: 14px; font-weight: 500; letter-spacing: -.01em;
+}
 
 /* ---------- 6. engagement rows: number | title | description ---------- */
 .rows { padding: clamp(80px, 14vh, 160px) var(--pad); }
@@ -212,22 +212,30 @@ html { scroll-padding-top: var(--nav-h); }
   min-height: 100vh; min-height: 100svh; padding: 12vh var(--pad) 8vh;
   display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
 }
-.fan { position: relative; display: flex; justify-content: center; align-items: center; gap: clamp(8px, 1.6vw, 24px); margin: clamp(36px, 7vh, 72px) 0; perspective: 1400px; }
+.sec-sub { max-width: 46ch; margin-top: 20px; color: var(--ink-2); font-size: 17px; line-height: 1.5; }
+/* the flat grid is the resting state GSAP spreads the stack into */
+.fan {
+  position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: stretch;
+  gap: clamp(12px, 1.4vw, 20px); width: min(100%, 1180px); margin: clamp(32px, 6vh, 64px) 0 0; perspective: 1400px;
+}
+/* overflow: clip (not hidden) so aspect-ratio still lets a card grow if its text needs the room;
+   max-height keeps the pinned section inside short laptop screens */
 .card {
-  position: relative; flex: none; width: clamp(120px, 15vw, 250px); aspect-ratio: 9 / 14; margin: 0;
-  border-radius: 16px; overflow: hidden;
+  position: relative; flex: none; display: flex; flex-direction: column; justify-content: flex-end;
+  aspect-ratio: 4 / 5; max-height: max(46svh, 300px); margin: 0; border-radius: 18px; overflow: clip;
   background: radial-gradient(120% 80% at 30% 15%, #50535b, #0c0d10 62%);
   box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .5);
 }
-/* resting tilt as `transform` so GSAP reads it as the end state of the fan-out */
-.card:nth-child(1) { transform: translateY(26px) rotate(-6deg); }
-.card:nth-child(2) { transform: translateY(-18px) rotate(3deg); }
-.card:nth-child(3) { transform: translateY(14px) rotate(-2deg); }
-.card:nth-child(4) { transform: translateY(-16px) rotate(4deg); }
-.card:nth-child(5) { transform: translateY(30px) rotate(6deg); }
-.card img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); }
-.card::after { content: ""; position: absolute; inset: 55% 0 0; background: linear-gradient(transparent, rgba(0, 0, 0, .7)); }
-.card figcaption { position: absolute; z-index: 1; left: 12px; right: 12px; bottom: 10px; color: #fff; font-size: 11px; text-align: left; }
+.card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; filter: grayscale(1) contrast(1.05); }
+.card::after { content: ""; position: absolute; inset: 30% 0 0; background: linear-gradient(transparent, rgba(0, 0, 0, .85) 60%); }
+.card figcaption { position: relative; z-index: 1; padding: clamp(18px, 1.8vw, 26px); color: #fff; text-align: left; }
+.card h3 { font-size: clamp(1.1rem, 1.5vw, 1.35rem); font-weight: 500; letter-spacing: -.03em; line-height: 1.15; }
+.card p { margin-top: 10px; color: rgba(255, 255, 255, .7); font-size: 14px; line-height: 1.5; }
+/* tablets: four columns get too narrow for the descriptions */
+@media (min-width: 761px) and (max-width: 1000px) {
+  .fan { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .card { aspect-ratio: 5 / 4; }
+}
 
 /* ---------- 5c. how we work ---------- */
 .journey { padding: clamp(80px, 14vh, 160px) var(--pad); }
@@ -300,7 +308,7 @@ html { scroll-padding-top: var(--nav-h); }
 
   /* hero: hand geometry as before; one real button instead of the chips (the nav already has Book a Call) */
   .hero { --s: 150vw; --g: 1vw; --meet: 52%; }
-  .hero-title { top: 34%; font-size: 11vw; }
+  .hero-title { top: 34%; font-size: 10vw; }
   .orb { --orb: 92vw; top: var(--meet); opacity: 1; filter: blur(20px); }
   .hero-foot { grid-template-columns: 1fr; gap: 18px; }
   .scroll-line, .hero-foot .chips { display: none; }
@@ -316,14 +324,14 @@ html { scroll-padding-top: var(--nav-h); }
 
   /* cards: a swipeable row instead of the pinned fan */
   .fan-sec { min-height: 0; padding: 72px var(--pad); }
+  .sec-sub { font-size: 16px; }
   .fan {
-    align-self: stretch; justify-content: flex-start; gap: 14px; margin: 32px calc(var(--pad) * -1) 0;
+    display: flex; width: auto; align-self: stretch; justify-content: flex-start; gap: 14px; margin: 32px calc(var(--pad) * -1) 0;
     padding: 8px var(--pad) 28px; /* room for the card shadows, which the scroller clips */
     overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--pad); perspective: none;
   }
-  /* `.fan .card` ties the :nth-child tilts on specificity and comes later, so it wins */
-  .fan .card { width: 72vw; max-width: 320px; aspect-ratio: 3 / 4; transform: none; scroll-snap-align: start; }
-  .card figcaption { left: 16px; bottom: 14px; font-size: 15px; font-weight: 500; }
+  .fan .card { width: 76vw; max-width: 320px; aspect-ratio: 3 / 4; scroll-snap-align: start; }
+  .card h3 { font-size: 1.25rem; }
 
   .journey, .reviews, .rows, .stack { padding: 72px var(--pad); }
   .journey .sec-head, .reviews .sec-head, .engage .sec-head { margin-bottom: 32px; }
@@ -346,7 +354,7 @@ html { scroll-padding-top: var(--nav-h); }
   .tool-icon { flex: none; width: 24px; }
   .tool-name, .tool--text .tool-name { font-size: 15px; letter-spacing: -.01em; }
 
-  /* reviews: swipeable */
+  /* impact cards: swipeable */
   .review-grid {
     display: flex; gap: 12px; margin: 0 calc(var(--pad) * -1); padding: 4px var(--pad) 12px;
     overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--pad);

@@ -165,13 +165,13 @@ if (window.gsap && window.ScrollTrigger) {
       gsap.from(row, { opacity: 0, y: 40, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: row, start: 'top 90%' } });
     });
 
-    // 4. Card fan — a flat stack of cards twists up and fans out to their CSS resting tilt.
+    // 4. Service cards — a flat stack of cards twists up and spreads into their CSS grid.
     // No invalidateOnRefresh: it would re-record the end state of this .from() as the stacked pose.
     const fan = document.querySelector('.fan');
     gsap.timeline({ scrollTrigger: { trigger: '.fan-sec', start: 'top top', end: '+=130%', pin: true, scrub: 1 } })
       .from('.card', {
         x: (i, el) => fan.clientWidth / 2 - (el.offsetLeft + el.offsetWidth / 2),
-        y: (i) => (i - 2) * -22,
+        y: (i, el, all) => fan.clientHeight / 2 - (el.offsetTop + el.offsetHeight / 2) + (i - (all.length - 1) / 2) * -22,
         rotationX: 68, rotationZ: -28, scale: 0.92,
         ease: 'power2.inOut', stagger: { each: 0.04, from: 'center' },
       });

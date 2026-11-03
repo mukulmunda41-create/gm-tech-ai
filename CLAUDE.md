@@ -41,7 +41,7 @@ Single-page marketing site for **GM Tech Solution**, an AI automation agency. It
 |---|---|---|
 | hero | pinned `+=120%`; the hands converge on scroll | hands meet on load; a "See what we build" button replaces the chips |
 | `.dark` video | clip-path reveal, then pinned `+=200%`; the words cycle | ~72svh band; all three words stacked; plays `tunnel-mobile.mp4` |
-| `.fan-sec` cards | pinned `+=130%`; the stack fans out | native scroll-snap row (`.fan .card` overrides the tilt) |
+| `.fan-sec` "What we build" | pinned `+=130%`; a stack of 4 service cards spreads into a 4-column grid (2×2 at 761–1000px) | native scroll-snap row |
 | how we work | 3 columns; a line draws across | vertical timeline with numbered circles |
 | `.stack` tools | CSS 3D ring (keyframes, not GSAP) | 2×5 grid of tiles |
 | reviews | 3 columns | scroll-snap row |
@@ -50,7 +50,7 @@ Single-page marketing site for **GM Tech Solution**, an AI automation agency. It
 
 **GSAP owns the transforms of anything it animates.** When GSAP first touches an element, it writes inline `translate: none; scale: none; rotate: none`. CSS individual transform properties on that element, including in `:hover` and `:active` rules, are therefore silently dead.
 - Elements GSAP animates (orb, hands) are positioned with margins and `calc`.
-- The cards' resting tilt is a CSS `transform`. GSAP reads it as the end state of the scroll `.from()`.
+- The service cards' resting state is the flat CSS grid. GSAP's scroll `.from()` starts them stacked at the grid's centre, so keep any card offset or tilt in CSS `transform`, never in individual transform properties.
 - Hover and press effects go on colours or backgrounds, or on a child or pseudo-element that GSAP never animates. For example, the logo hover scales `.mark`, not `.brand`.
 - The intro animates `.nav > *`, so this applies to the nav CTA, the brand link and the nav links.
 
@@ -95,7 +95,7 @@ Single-page marketing site for **GM Tech Solution**, an AI automation agency. It
   - the pill sliders
 - **Content:**
   - Copy is written for GM Tech, not copied from reference sites.
-  - Never invent reviews, stats or contact details. Reviews, email, WhatsApp number and booking link are marked `<!-- PLACEHOLDER -->` until the owner provides real ones. The email and WhatsApp appear twice, in the footer and in `.menu-foot`; update both together.
+  - Never invent reviews, stats or contact details. The WhatsApp number and booking link are marked `<!-- PLACEHOLDER -->` until the owner provides real ones. The reviews section holds owner-written use-case cards until real reviews exist. The email and WhatsApp appear twice, in the footer and in `.menu-foot`; update both together.
 - **Mobile:** same URL. Phones get their own layout and motion at ≤760px, and desktop must not change when the phone version is edited.
   - No em dashes in visible copy.
 - **Pending until a final domain is chosen:** canonical, `robots.txt`, `sitemap.xml`, and absolute `og:image` and `twitter:image` URLs.

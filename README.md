@@ -11,7 +11,7 @@ The site works on three kinds of devices. The section is picked automatically, s
 **Desktop (wider than 760px)**
 - Scroll-driven hero: a human hand and a robot hand reach for each other.
 - A pinned server-corridor video with cycling words.
-- A stack of service cards that fans out as you scroll.
+- "What we build": a stack of four service cards that spreads into a grid as you scroll.
 - A rotating 3D ring of tool logos.
 - A small cursor "spark" that opens into a ring over links.
 
@@ -89,8 +89,8 @@ When linking a fresh checkout, use `vercel link --project gm-tech-ai`. A differe
 
 Replace these placeholders. Each one is marked `<!-- PLACEHOLDER -->` in `index.html`.
 
-- [ ] **Client reviews:** three cards in the "What our clients say" section. Use real reviews only, or remove the section.
-- [ ] **Email, WhatsApp number and booking link:** these appear in the footer *and* in the phone menu. Update both.
+- [ ] **Client reviews:** the "Our Impact & Results" section shows three outcome cards for launch. Swap in real reviews once clients sign off.
+- [ ] **WhatsApp number and booking link:** these appear in the footer *and* in the phone menu. Update both. (Email is set to support@gmtechsolution.com.)
 - [ ] **Final domain:** once it is set, add a canonical link, `robots.txt`, `sitemap.xml`, and absolute `og:image` / `twitter:image` URLs.
 
 ## Editing notes
