@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book a Call | GM Tech Solution</title>
+  <meta name="description" content="Book a free discovery call with GM Tech Solution. Tell us what you want to automate and we'll reply on WhatsApp.">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="nav">
+  <a class="nav-link" href="./">← Back to site</a>
+  <a class="brand" href="./" aria-label="GM Tech Solution home"><span class="mark" aria-hidden="true"></span></a>
+  <a class="nav-link book-direct" href="https://wa.me/917000211498">WhatsApp · +91 70002 11498</a>
+</header>
+
+<main class="book">
+  <div class="book-intro">
+    <p class="eyebrow">Book a call</p>
+    <h1 class="sec-title">Let's talk about <span class="muted">what to automate.</span></h1>
+    <p class="book-copy">Tell us a little about your business. WhatsApp opens with your details already written; press send and we'll reply there to fix a time.</p>
+    <ol class="book-steps">
+      <li>Fill in a few details.</li>
+      <li>Send them on WhatsApp. The message is ready for you.</li>
+      <li>We reply on WhatsApp to confirm a time for the call.</li>
+    </ol>
+  </div>
+
+  <!-- sends to the number in WHATSAPP (script below); the same number is in this page's header and in index.html's footer and menu -->
+  <form class="book-form" id="book">
+    <div class="field">
+      <label for="name">Your name</label>
+      <input id="name" name="name" autocomplete="name" required>
+    </div>
+    <div class="field">
+      <label for="business">Business name <span class="opt">(optional)</span></label>
+      <input id="business" name="business" autocomplete="organization">
+    </div>
+    <fieldset class="field">
+      <legend>What do you need help with?</legend>
+      <div class="picks">
+        <label class="pick"><input type="radio" name="service" value="Autonomous AI Agents" required><span>AI Agents</span></label>
+        <label class="pick"><input type="radio" name="service" value="AI Voice Agents"><span>Voice Agents</span></label>
+        <label class="pick"><input type="radio" name="service" value="Chatbots & WhatsApp AI"><span>Chatbots &amp; WhatsApp AI</span></label>
+        <label class="pick"><input type="radio" name="service" value="Workflow Automation"><span>Workflow Automation</span></label>
+        <label class="pick"><input type="radio" name="service" value="AI Consulting / Education"><span>Consulting / Training</span></label>
+        <label class="pick"><input type="radio" name="service" value="Not sure yet"><span>Not sure yet</span></label>
+      </div>
+    </fieldset>
+    <div class="field-row">
+      <div class="field">
+        <label for="day">Preferred day <span class="opt">(optional)</span></label>
+        <input id="day" name="day" type="date">
+      </div>
+      <div class="field">
+        <label for="time">Best time</label>
+        <select id="time" name="time">
+          <option>Any time</option>
+          <option>Morning (10am–1pm)</option>
+          <option>Afternoon (1–5pm)</option>
+          <option>Evening (5–8pm)</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="details">What would you like to automate? <span class="opt">(optional)</span></label>
+      <textarea id="details" name="details" rows="4" placeholder="e.g. we miss leads that come in on WhatsApp after hours"></textarea>
+    </div>
+    <button class="nav-cta book-send" type="submit">Send on WhatsApp →</button>
+    <p class="book-note">Opens WhatsApp with your message filled in. Nothing is sent until you press send.</p>
+    <p class="book-done" role="status" hidden>WhatsApp didn't open? <a href="https://wa.me/917000211498">Open it here</a>.</p>
+  </form>
+</main>
+
+<script>
+const WHATSAPP = '917000211498';
+const form = document.getElementById('book');
+const done = form.querySelector('.book-done');
+const day = form.elements.day;
+day.min = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD in local time
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const v = (k) => form.elements[k].value.trim();
+  const when = v('day') && new Date(v('day') + 'T00:00').toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
+  const lines = [['Name', v('name')], ['Business', v('business')], ['Interested in', v('service')], ['Preferred day', when], ['Best time', v('time')], ['Details', v('details')]]
+    .filter(([, x]) => x).map(([k, x]) => `*${k}:* ${x}`);
+  const url = `https://wa.me/${WHATSAPP}?text=` + encodeURIComponent(["Hi GM Tech Solution, I'd like to book a call.", '', ...lines].join('\n'));
+  done.querySelector('a').href = url;
+  done.hidden = false;
+  const w = window.open(url, '_blank');
+  if (w) w.opener = null; else location.href = url; // popup blocked: open WhatsApp in this tab instead
+});
+</script>
+</body>
+</html>

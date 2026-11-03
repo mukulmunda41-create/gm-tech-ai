@@ -68,6 +68,7 @@ index.html        the page: all sections and content
 style.css         design tokens, sections, the phone layout (@media max-width: 760px), reduced motion
 main.js           menu, nav, cursor spark, and the GSAP motion (desktop / phone / reduced-motion branches)
 404.html          designed not-found page
+book.html         Book a Call form; opens WhatsApp (+91 70002 11498) with the client's details filled in
 assets/           hand cut-outs, service card images, videos, tool icons, logo, favicon, share image
 asset-prompts.md  the prompts used to generate the images and videos
 CLAUDE.md         architecture notes and design decisions (read this before changing motion or layout)
@@ -90,7 +91,7 @@ When linking a fresh checkout, use `vercel link --project gm-tech-ai`. A differe
 Replace these placeholders. Each one is marked `<!-- PLACEHOLDER -->` in `index.html`.
 
 - [ ] **Client reviews:** the "Our Impact & Results" section shows three outcome cards for launch. Swap in real reviews once clients sign off.
-- [ ] **WhatsApp number and booking link:** these appear in the footer *and* in the phone menu. Update both. (Email is set to support@gmtechsolution.com.)
+- [x] **Booking:** every "Book a Call" button opens `book.html`, which sends the client's details to WhatsApp +91 70002 11498. Email gmtechsolution24.7@gmail.com and the WhatsApp number are in the footer *and* the phone menu.
 - [ ] **Final domain:** once it is set, add a canonical link, `robots.txt`, `sitemap.xml`, and absolute `og:image` / `twitter:image` URLs.
 
 ## Editing notes

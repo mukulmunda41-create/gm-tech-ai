@@ -98,6 +98,63 @@ Minimal logo symbol of three small circles connected by smooth flowing lines tha
 
 ---
 
+## 6. Hero live video (haath side se aakar ungli touch karein)
+
+Dono video ka start frame ek hi hai: `~/Downloads/gm-hero-start-frame.png` (1920 × 1080, ungliyon ke beech chhota gap). Video 1 isi se bana hai, isliye Video 2 bhi isi se banana hai, taaki dono ek hi frame pe judein. Ye site ke asli cut-outs aur orb se bana hai, isme koi text nahi hai.
+
+Site pe aise chalega:
+
+| Site pe time | Kya dikhega | Kahan se |
+|---|---|---|
+| 0-2s | sirf halo, upar headline | Video 1 ulta |
+| 2-6.5s | dono haath side se aate hain, dheere hote hain | Video 1 ulta |
+| 6.5-8s | ungliyan touch, phir chhota sa gap | Video 1 ulta |
+| 8s ke baad | ungliyan touch, white glow, phir wapas gap; hamesha repeat | Video 2 boomerang loop |
+
+Video 1 ulta isliye: tool end frame nahi leta. Agar AI ko bolein "haath bahar se aao", to woh naye haath bana dega jo site se match nahi karenge. Isliye haath touch se bahar jaate hue banwao, main ffmpeg se ulta kar dunga, aur video bilkul hamare frame pe khatam hoga.
+
+### Video 1 → `hero-enter.mp4` (16:9, 1080p, 8 sec, no audio, motion normal) ✅ PASS (`..._c4cd1343_1080p.mp4`)
+
+```
+Image-to-video. Use the uploaded image as the exact first frame. Keep its framing, scale, lighting and colors identical for the whole clip. Locked-off static camera on a tripod: no zoom, no pan, no tilt, no dolly, no shake, no focus change. One continuous 8-second shot with no cuts. Premium minimal tech commercial, calm and elegant.
+
+Scene: on a pure white background, a photorealistic human hand enters from the left edge and a white-and-silver humanoid robotic hand enters from the right edge. Their index fingertips are touching in the center of the frame, inspired by "The Creation of Adam". Behind the fingertips glows a large, soft, blurred pastel rainbow halo (peach, butter yellow, mint, sky blue, periwinkle, lilac).
+
+Motion, second by second:
+0-1s: completely still. Exactly the first frame, fingertips touching.
+1-2s: the two fingertips separate very slowly, just a few millimeters.
+2-6s: both arms glide straight back along one horizontal line, the human hand toward the left edge and the robotic hand toward the right edge, at the same speed, as a perfect mirror of each other. They start slowly and gradually accelerate. The hands keep their exact pose the whole time: no rotation, no wrist bending, no finger movement, same height, same size. It is a pure sideways slide, as if each arm is on a rail. Both hands fully leave the frame through the side edges; no shoulder, body or new arm is ever revealed.
+6-8s: only the empty pure white background and the soft pastel halo remain. The halo stays in the same place and slowly swirls clockwise. Nothing else appears.
+
+The background stays flat pure white (#FFFFFF) in every frame, with no grey, no vignette and no shadows. The human hand keeps five natural fingers and real skin texture. The robot hand stays rigid brushed silver and matte white metal with black joints; nothing bends, stretches or melts. Motion blur is minimal and natural.
+
+Do not include: text, letters, logos, watermark, people, faces, bodies, shoulders, extra hands or fingers, hands changing shape, morphing, melting metal, sparks, lightning, electricity, lens flare, particles, smoke, glow at the fingertips, new shadows, background color change, darkening, camera movement, zoom, scene cuts.
+```
+
+### Video 2 → `hero-loop.mp4` (16:9, 1080p, 8 sec, no audio, motion low) ⏳ v2
+
+Pehla try (`..._b0920eb3_1080p.mp4`) reject hua: ungliyon ke beech ek kaanch ki goli (pearl) ban gayi, robot ki ungliyon pe peeli neon lines aa gayin, aur halo bahut gehra rainbow ring ban gaya. Isliye v2 mein "pearl" aur robot pe light wali line hata di hai, aur halo ko pale rakhne ko bola hai.
+
+```
+Image-to-video. Use the uploaded image as the exact first frame. Keep its framing, scale, lighting and colors identical for the whole clip. Locked-off static camera on a tripod: no zoom, no pan, no tilt, no dolly, no shake, no focus change. One continuous 8-second shot with no cuts. Premium minimal tech commercial, calm and elegant.
+
+Scene: on a pure white background, a photorealistic human hand from the left and a white-and-silver humanoid robotic hand from the right reach toward each other, index fingertips almost touching in the center of the frame, inspired by "The Creation of Adam". Behind them is a very pale, soft, blurred pastel halo.
+
+Motion, second by second:
+0-1s: completely still, exactly the first frame.
+1-3s: both index fingers move slowly toward each other and the fingertips touch gently in the center of the frame. Only the hands move, and only a little; the forearms stay where they are.
+3-5s: at the exact point of contact, a small soft white glow slowly appears, as if a light is being turned on very gently. It is pure white light, about the size of a fingertip, softly fading at its edges.
+5-8s: the glow holds steady with a very gentle breathing brightness. All motion eases out and stops completely by 7s. The fingertips stay touching until the last frame.
+
+The halo stays exactly as pale, soft and faint as in the first frame for the whole clip. It only rotates very slowly; it does not become brighter, more colorful or sharper, and no extra rings appear. The robot hand stays exactly as it is: white and silver metal with black joints, with no glow, light streaks or color on it. The human hand keeps five natural fingers and real skin texture. The background stays flat pure white (#FFFFFF) in every frame.
+
+Do not include: a ball, pearl, bubble, sphere or any object between the fingers, yellow or green light, glowing robot fingers, neon lines, light streaks, lightning, electricity, sparks, lens flare, particles, smoke, saturated rainbow rings, text, letters, logos, watermark, extra hands or fingers, fingers merging, morphing, melting metal, new shadows, background color change, camera movement, zoom, scene cuts.
+```
+
+> 5 sec wala tool ho to: 0-0.5s still, 0.5-2s ungliyan touch, 2-3.5s white glow aaye, 3.5-5s sab ruk jaaye, ungliyan touch mein.
+
+---
+
 ## Checklist
 
 | File | Kahan use hoga | Status |
@@ -111,3 +168,5 @@ Minimal logo symbol of three small circles connected by smooth flowing lines tha
 | card-messaging.png | Services card fan | ✅ (→ `card-messaging.webp`) |
 | card-core.png | Services card fan (center) | ✅ (→ `card-core.webp`) |
 | logo (optional) | Navbar + footer + favicon | ✅ (option A, GM monogram → `logo.png`, `favicon.png`) |
+| hero-enter.mp4 | Hero intro, haath andar aate hain (desktop) | ✅ PASS (`c4cd1343`), reverse karna baaki |
+| hero-loop.mp4 | Hero live loop, touch glow (desktop) | ⏳ v1 reject (`b0920eb3`), v2 prompt ready |

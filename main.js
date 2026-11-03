@@ -18,9 +18,15 @@ function setMenu(open) {
 }
 menuBtn.addEventListener('click', () => setMenu(menu.hidden));
 menu.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
-// Services dropdown opens on hover/focus; drop focus after a pick so it closes.
-document.querySelector('.drop').addEventListener('click', () => document.activeElement.blur());
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { setMenu(false); menuBtn.focus(); } });
+// Services dropdown opens on hover/focus; a pick closes it until the pointer leaves.
+const navDrop = document.querySelector('.nav-drop');
+navDrop.querySelector('.drop').addEventListener('click', () => { document.activeElement.blur(); navDrop.classList.add('is-shut'); });
+navDrop.addEventListener('pointerleave', () => navDrop.classList.remove('is-shut'));
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  if (!menu.hidden) { setMenu(false); menuBtn.focus(); }
+  else if (document.activeElement.closest('.nav-drop')) document.activeElement.blur();
+});
 // The sheet is phone-only; rotating into the wider layout (where its button is hidden) closes it.
 matchMedia('(max-width: 760px)').addEventListener('change', () => setMenu(false));
 // Skip link: smooth scroll may intercept the jump, so move focus to the content explicitly.

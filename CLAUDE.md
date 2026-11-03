@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Single-page marketing site for **GM Tech Solution**, an AI automation agency. It is made of plain static files: `index.html`, `style.css`, `main.js`, `404.html` and `assets/`. There is no build step and no `package.json`. GSAP 3.12.5 with ScrollTrigger, and Lenis 1.3.27, load from CDNs at the bottom of `index.html`.
+Single-page marketing site for **GM Tech Solution**, an AI automation agency. It is made of plain static files: `index.html`, `style.css`, `main.js`, `404.html`, `book.html` (the Book a Call form; it opens WhatsApp with the message filled in, no backend) and `assets/`. There is no build step and no `package.json`. GSAP 3.12.5 with ScrollTrigger, and Lenis 1.3.27, load from CDNs at the bottom of `index.html`.
 
 ## Commands
 
@@ -69,6 +69,7 @@ Single-page marketing site for **GM Tech Solution**, an AI automation agency. It
 **Nav** has no bar: links on the left, the logo in the centre and the CTA on the right, with a soft white gradient `::before`.
 - `nav--dark` makes the UI white over the video, the tools ring and the footer.
 - `nav--hidden` hides the nav while scrolling down and brings it back on scroll up.
+- **The Services panel (`.drop`)** opens on hover or focus, desktop only. It is a frosted 2×2 grid of service tiles plus a Book a call row; the panel slides down and the tiles follow, staggered by `--i`. Picking a tile adds `.is-shut` until the pointer leaves, and Escape closes it. Keep its titles in step with the `#services` cards.
 - **On phones, the `.callbar` "Book a Call" bar is driven by CSS alone.** It shows through `.nav--hidden:not(:focus-within) ~ .callbar`, so it must stay a later sibling of `header.nav`. Only one Book a Call is ever on screen. An IntersectionObserver on `#contact` adds `.is-off` once the footer is in view.
 - **The phone menu is a full-screen sheet.** `setMenu()` does four things:
   - toggles `html.menu-open`, which locks scroll, keeps the nav in ink colour and hides the nav CTA;
@@ -95,7 +96,7 @@ Single-page marketing site for **GM Tech Solution**, an AI automation agency. It
   - the pill sliders
 - **Content:**
   - Copy is written for GM Tech, not copied from reference sites.
-  - Never invent reviews, stats or contact details. The WhatsApp number and booking link are marked `<!-- PLACEHOLDER -->` until the owner provides real ones. The reviews section holds owner-written use-case cards until real reviews exist. The email and WhatsApp appear twice, in the footer and in `.menu-foot`; update both together.
+  - Never invent reviews, stats or contact details. The reviews section holds owner-written use-case cards until real reviews exist. The email and WhatsApp appear in the footer and in `.menu-foot`; the WhatsApp number is also in `book.html` (header link and the `WHATSAPP` constant). Update them together.
 - **Mobile:** same URL. Phones get their own layout and motion at ≤760px, and desktop must not change when the phone version is edited.
   - No em dashes in visible copy.
 - **Pending until a final domain is chosen:** canonical, `robots.txt`, `sitemap.xml`, and absolute `og:image` and `twitter:image` URLs.
